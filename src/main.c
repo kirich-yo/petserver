@@ -16,13 +16,24 @@
 const int server_port = 80;
 
 int server_socket;
+FILE * index_html;
 
 void close_server_socket(void) {
 	close(server_socket);
 }
 
+void close_index_html(void) {
+	if (index_html) fclose(index_html);
+}
+
 int main() {
+	atexit(close_index_html);
 	atexit(close_server_socket);
+
+	index_html = fopen("srv/index.html", "r");
+	if (!index_html) 
+		DIE("fopen() failed: %s\n", strerror(errno));
+
 	struct sockaddr_in server_addr;
 
 	server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -42,6 +53,7 @@ int main() {
 		close(server_socket);
 		DIE("listen() failed: %s\n", strerror(errno));
 	}
+	printf("Listening at localhost:%d\n", server_port);
 
 	int client_socket;
 	struct sockaddr_in client_addr;
@@ -63,12 +75,20 @@ int main() {
 	} while (http_request_length == 512);
 	printf("\n");
 
-	const char * http_response = "HTTP/1.1 200 OK\r\n"
-		"Content-Type: text/plain; charset=UTF-8\r\n"
-		"\r\n"
-		"Hello, World!\r\n";
+	fseek(index_html, 0, SEEK_END);
+	long index_html_size = ftell(index_html) + 1;
+	fseek(index_html, 0, SEEK_SET);
 
-	send(client_socket, http_response, strlen(http_response), 0);
+	char * index_html_data = (char *)malloc(index_html_size);
+	fread(index_html_data, sizeof(char), index_html_size, index_html);
 
+	const char * http_response_header = "HTTP/1.1 200 OK\r\n"
+		"Content-Type: text/html; charset=UTF-8\r\n"
+		"\r\n";
+
+	send(client_socket, http_response_header, strlen(http_response_header), 0);
+	send(client_socket, index_html_data, index_html_size, 0);
+
+	free(index_html_data);
 	return 0;
 }
