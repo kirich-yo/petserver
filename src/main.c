@@ -40,24 +40,26 @@ int main(int argc, char ** argv) {
 	logger = Pet_NewStdoutLogger(PL_DEBUG);
 	//logger->log_formatter = Pet_JSONLogFormatter;
 
-	if (argc < 2)
-		DIE("Usage: %s <port>\nExample: %s 8080\n\n", argv[0], argv[0]);
+	if (argc < 2) {
+		fprintf(stderr, "Usage: %s <port>\nExample: %s 8080\n\n", argv[0], argv[0]);
+		exit(1);
+	}
 
 	in_port_t server_port = atoi(argv[1]);
 
 	index_html = fopen("srv/index.html", "r");
 	if (!index_html) 
-		DIE("fopen(\"srv/index.html\") failed: %s\n", strerror(errno));
+		DIE("fopen(\"srv/index.html\") failed: %s", strerror(errno));
 
 	struct sockaddr_in server_addr;
 
 	server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (server_socket < 0)
-		DIE("socket() failed: %s\n", strerror(errno));
+		DIE("socket() failed: %s", strerror(errno));
 
 	const int optenable = 1;
 	if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &optenable, sizeof(int)) < 0)
-		DIE("setsockopt(SO_REUSEADDR) failed: %s\n", strerror(errno));
+		DIE("setsockopt(SO_REUSEADDR) failed: %s", strerror(errno));
 
 	memset(&server_addr, 0, sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
@@ -65,14 +67,14 @@ int main(int argc, char ** argv) {
 	server_addr.sin_port = htons(server_port);
 
 	if (bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
-		DIE("bind() failed: %s\n", strerror(errno));
+		DIE("bind() failed: %s", strerror(errno));
 	}
 
-	Pet_FmtLog(logger, PL_INFO, "Server running at http://127.0.0.1:%d\n", server_port);
+	Pet_FmtLog(logger, PL_INFO, "Server running at http://127.0.0.1:%d", server_port);
 	for (;;) {
 		if (listen(server_socket, SOMAXCONN) < 0) {
 			close(server_socket);
-			DIE("listen() failed: %s\n", strerror(errno));
+			DIE("listen() failed: %s", strerror(errno));
 		}
 	
 		int client_socket;
@@ -81,7 +83,7 @@ int main(int argc, char ** argv) {
 		memset(&client_addr, 0, sizeof(client_addr));
 	
 		if ((client_socket = accept(server_socket, (struct sockaddr *)&client_addr, &client_addr_len)) < 0) {
-			DIE("accept() failed: %s\n", strerror(errno));
+			DIE("accept() failed: %s", strerror(errno));
 		}
 	
 		char client_addr_str[INET_ADDRSTRLEN];

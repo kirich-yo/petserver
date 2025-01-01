@@ -42,7 +42,7 @@ const char * Pet_DefaultLogFormatter(enum PetLogLevel log_level) {
 
 	size_t fmt_buff_size = snprintf(NULL, 0, "[%s] %s %%s", fmt_time, PET_LOG_LEVEL_STRINGS[log_level]);
 	fmt_buff = (char *)malloc(fmt_buff_size);
-	sprintf(fmt_buff, "[%s] %6s %%s", fmt_time, PET_LOG_LEVEL_STRINGS[log_level]);
+	sprintf(fmt_buff, "[%s] %6s %%s\n", fmt_time, PET_LOG_LEVEL_STRINGS[log_level]);
 
 	return fmt_buff;
 }
@@ -63,9 +63,8 @@ const char * Pet_JSONLogFormatter(enum PetLogLevel log_level) {
 
 	size_t fmt_buff_size = snprintf(NULL, 0, "[%s] %s %%s", fmt_time, PET_LOG_LEVEL_STRINGS[log_level]);
 	fmt_buff = (char *)malloc(fmt_buff_size);
-	sprintf(fmt_buff, "{\"time\": \"%s\", \"log_level\": \"%-5s\", \"text\": \"%%s\"", fmt_time, PET_LOG_LEVEL_STRINGS[log_level]);
+	sprintf(fmt_buff, "{\"time\": \"%s\", \"log_level\": \"%-5s\", \"text\": \"%%s\"}\n", fmt_time, PET_LOG_LEVEL_STRINGS[log_level]);
 
-	puts(fmt_buff);
 	return fmt_buff;
 }
 
