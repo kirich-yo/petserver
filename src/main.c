@@ -9,13 +9,16 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include "logger/logger.h"
+
 #define DIE(s...) {\
-	fprintf(stderr, s);\
+	Pet_FmtLog(logger, PL_FATAL, s);\
 	exit(1);\
 }
 
 int server_socket;
 FILE * index_html;
+PetLogger * logger;
 
 void close_server_socket(void) {
 	close(server_socket);
@@ -25,17 +28,26 @@ void close_index_html(void) {
 	if (index_html) fclose(index_html);
 }
 
+void close_logger(void) {
+	if (logger) Pet_FreeLogger(logger);
+}
+
 int main(int argc, char ** argv) {
-	if (argc < 2)
-		DIE("Usage: %s <port>\nExample: %s 8080\n\n", argv[0], argv[0]);
 	atexit(close_index_html);
 	atexit(close_server_socket);
+	atexit(close_logger);
+
+	logger = Pet_NewStdoutLogger(PL_DEBUG);
+	//logger->log_formatter = Pet_JSONLogFormatter;
+
+	if (argc < 2)
+		DIE("Usage: %s <port>\nExample: %s 8080\n\n", argv[0], argv[0]);
 
 	in_port_t server_port = atoi(argv[1]);
 
 	index_html = fopen("srv/index.html", "r");
 	if (!index_html) 
-		DIE("[srv/index.html] fopen() failed: %s\n", strerror(errno));
+		DIE("fopen(\"srv/index.html\") failed: %s\n", strerror(errno));
 
 	struct sockaddr_in server_addr;
 
@@ -56,7 +68,7 @@ int main(int argc, char ** argv) {
 		DIE("bind() failed: %s\n", strerror(errno));
 	}
 
-	printf("Server running at http://127.0.0.1:%d\n", server_port);
+	Pet_FmtLog(logger, PL_INFO, "Server running at http://127.0.0.1:%d\n", server_port);
 	for (;;) {
 		if (listen(server_socket, SOMAXCONN) < 0) {
 			close(server_socket);
@@ -72,6 +84,9 @@ int main(int argc, char ** argv) {
 			DIE("accept() failed: %s\n", strerror(errno));
 		}
 	
+		char client_addr_str[INET_ADDRSTRLEN];
+		inet_ntop(AF_INET, &client_addr, client_addr_str, INET_ADDRSTRLEN);
+		Pet_FmtLog(logger, PL_INFO, "New request from %s\n", client_addr_str);
 		char request_buffer[512];
 		ssize_t http_request_length;
 		do {
