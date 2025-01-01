@@ -1,0 +1,11 @@
+server:
+  listen_port: 8080
+  root: /var/www
+  headers:
+    Content-Type: text/html; charset=utf-8
+    Content-Language: en-US, ru-RU"
+static:
+  - index.html
+  - favicon.ico
+  - style.css
+  - script.js

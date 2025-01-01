@@ -1,3 +1,3 @@
-#include "Logger.h"
+#include "logger.h"
 
 /* TODO: Design and implement the logger */
