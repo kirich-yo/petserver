@@ -38,7 +38,7 @@ int main(int argc, char ** argv) {
 	atexit(close_logger);
 
 	logger = Pet_NewStdoutLogger(PL_DEBUG);
-	//logger->log_formatter = Pet_JSONLogFormatter;
+	logger->log_formatter = Pet_PrettyLogFormatter;
 
 	if (argc < 2) {
 		fprintf(stderr, "Usage: %s <port>\nExample: %s 8080\n\n", argv[0], argv[0]);

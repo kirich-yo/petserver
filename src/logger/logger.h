@@ -13,6 +13,28 @@ static const char * PET_LOG_LEVEL_STRINGS[] = {
 	"FATAL:"
 };
 
+static const char * PET_LOG_LEVEL_COLORS[] = {
+	"\033[102m",
+	"\033[104m",
+	"\033[43m",
+	"\033[101m",
+	"\033[42m"
+};
+
+static const char * PET_LOG_TEXT_COLORS[] = {
+	"\033[0m",
+	"\033[0m",
+	"\033[33m",
+	"\033[91m",
+	"\033[1;31m"
+};
+
+static const char * PET_LOG_WHITE_BOLD = "\033[1;97m";
+
+static const char * PET_LOG_DARK_GRAY = "\033[90m";
+
+static const char * PET_LOG_RESET_COLOR = "\033[0m";
+
 enum PetLogLevel {
 	PL_DEBUG,
 	PL_INFO,
