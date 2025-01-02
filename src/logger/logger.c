@@ -6,8 +6,8 @@
 
 PetLogger * Pet_NewFileLogger(const char * std_filename, const char * err_filename, enum PetLogLevel log_level) {
 	PetLogger * new_logger = (PetLogger *)malloc(sizeof(PetLogger));
-	FILE * log_file = fopen(std_filename, "w");
-	FILE * log_err_file = fopen(err_filename, "w");
+	FILE * log_file = fopen(std_filename, "a");
+	FILE * log_err_file = fopen(err_filename, "a");
 
 	new_logger->std_output = log_file;
 	new_logger->err_output = log_err_file;
