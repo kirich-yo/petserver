@@ -40,14 +40,8 @@ int main(int argc, char ** argv) {
 	logger = Pet_NewStdoutLogger(PL_DEBUG);
 	logger->log_formatter = Pet_PrettyLogFormatter;
 
-	Pet_FmtLog(logger, PL_DEBUG, "Test %d %s %p %f", 123, "Hello", logger, 0.5f);
-	Pet_Log(logger, PL_INFO, "Test");
-	Pet_Log(logger, PL_WARN, "Test");
-	Pet_Log(logger, PL_ERROR, "Test");
-	Pet_Log(logger, PL_FATAL, "Test");
-
 	if (argc < 2) {
-		fprintf(stderr, "Usage: %s <port>\nExample: %s 8080\n\n", argv[0], argv[0]);
+		fprintf(stderr, "PetServer is a web-server pet project.\n\nUsage:\n  %s [port]\n  Example: %s 8080\n\nUse \"%s [command] --help\" for more information about a command.\n\n", argv[0], argv[0], argv[0]);
 		exit(1);
 	}
 
@@ -76,7 +70,7 @@ int main(int argc, char ** argv) {
 		DIE("bind() failed: %s", strerror(errno));
 	}
 
-	Pet_FmtLog(logger, PL_INFO, "Server running at http://127.0.0.1:%d", server_port);
+	Pet_FmtLog(logger, PL_INFO, "Server running at \033[93mhttp://127.0.0.1:\033[33m%d", server_port);
 	for (;;) {
 		if (listen(server_socket, SOMAXCONN) < 0) {
 			close(server_socket);
@@ -94,7 +88,7 @@ int main(int argc, char ** argv) {
 	
 		char client_addr_str[INET_ADDRSTRLEN];
 		inet_ntop(AF_INET, &client_addr, client_addr_str, INET_ADDRSTRLEN);
-		Pet_FmtLog(logger, PL_INFO, "New request from %s", client_addr_str);
+		Pet_FmtLog(logger, PL_INFO, "New request from \033[93m%s", client_addr_str);
 		char request_buffer[512];
 		ssize_t http_request_length;
 		do {
