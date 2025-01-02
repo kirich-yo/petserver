@@ -40,7 +40,7 @@ int main(int argc, char ** argv) {
 	logger = Pet_NewStdoutLogger(PL_DEBUG);
 	logger->log_formatter = Pet_PrettyLogFormatter;
 
-	Pet_Log(logger, PL_DEBUG, "Test");
+	Pet_FmtLog(logger, PL_DEBUG, "Test %d %s %p %f", 123, "Hello", logger, 0.5f);
 	Pet_Log(logger, PL_INFO, "Test");
 	Pet_Log(logger, PL_WARN, "Test");
 	Pet_Log(logger, PL_ERROR, "Test");
@@ -94,7 +94,7 @@ int main(int argc, char ** argv) {
 	
 		char client_addr_str[INET_ADDRSTRLEN];
 		inet_ntop(AF_INET, &client_addr, client_addr_str, INET_ADDRSTRLEN);
-		Pet_FmtLog(logger, PL_INFO, "New request from %s\n", client_addr_str);
+		Pet_FmtLog(logger, PL_INFO, "New request from %s", client_addr_str);
 		char request_buffer[512];
 		ssize_t http_request_length;
 		do {
