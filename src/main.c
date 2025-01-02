@@ -40,6 +40,12 @@ int main(int argc, char ** argv) {
 	logger = Pet_NewStdoutLogger(PL_DEBUG);
 	logger->log_formatter = Pet_PrettyLogFormatter;
 
+	Pet_Log(logger, PL_DEBUG, "Test");
+	Pet_Log(logger, PL_INFO, "Test");
+	Pet_Log(logger, PL_WARN, "Test");
+	Pet_Log(logger, PL_ERROR, "Test");
+	Pet_Log(logger, PL_FATAL, "Test");
+
 	if (argc < 2) {
 		fprintf(stderr, "Usage: %s <port>\nExample: %s 8080\n\n", argv[0], argv[0]);
 		exit(1);

@@ -18,7 +18,7 @@ static const char * PET_LOG_LEVEL_COLORS[] = {
 	"\033[104m",
 	"\033[43m",
 	"\033[101m",
-	"\033[42m"
+	"\033[41m"
 };
 
 static const char * PET_LOG_TEXT_COLORS[] = {
