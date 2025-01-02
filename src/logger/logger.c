@@ -38,7 +38,7 @@ const char * Pet_DefaultLogFormatter(enum PetLogLevel log_level) {
 	struct tm * tm_time = (struct tm *)malloc(sizeof(struct tm));
 	localtime_r(&unix_time, tm_time);
 	strftime(fmt_time, 20, "%d.%m.%Y %H:%M:%S", tm_time);
-	// free(tm_time);
+	free(tm_time);
 
 	size_t fmt_buff_size = snprintf(NULL, 0, "[%s] %6s %%s", fmt_time, PET_LOG_LEVEL_STRINGS[log_level]);
 	fmt_buff = (char *)malloc(fmt_buff_size);
@@ -57,7 +57,7 @@ const char * Pet_PrettyLogFormatter(enum PetLogLevel log_level) {
 	struct tm * tm_time = (struct tm *)malloc(sizeof(struct tm));
 	localtime_r(&unix_time, tm_time);
 	strftime(fmt_time, 20, "%d.%m.%Y %H:%M:%S", tm_time);
-	// free(tm_time);
+	free(tm_time);
 
 	size_t fmt_buff_size = snprintf(NULL, 0, "%s[%s] %s%s%6s%s %s%%s%s\n",
 			PET_LOG_DARK_GRAY,
@@ -94,7 +94,7 @@ const char * Pet_JSONLogFormatter(enum PetLogLevel log_level) {
 	struct tm * tm_time = (struct tm *)malloc(sizeof(struct tm));
 	localtime_r(&unix_time, tm_time);
 	strftime(fmt_time, 21, "%Y-%m-%dT%H:%M:%SZ", tm_time);
-	// free(tm_time);
+	free(tm_time);
 
 	size_t fmt_buff_size = snprintf(NULL, 0, "{\"time\": \"%s\", \"log_level\": \"%-5s\", \"text\": \"%%s\"}\n", fmt_time, PET_LOG_LEVEL_STRINGS[log_level]);
 	fmt_buff = (char *)malloc(fmt_buff_size);
